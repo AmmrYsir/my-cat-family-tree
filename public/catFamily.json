@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "name": "Mittens",
+    "avatarUrl": "/avatars/mittens.png",
+    "parentId": null
+  },
+  {
+    "id": "2",
+    "name": "Whiskers",
+    "avatarUrl": "/avatars/whiskers.png",
+    "parentId": "1"
+  },
+  {
+    "id": "3",
+    "name": "Paws",
+    "avatarUrl": "/avatars/paws.png",
+    "parentId": "1"
+  },
+  {
+    "id": "4",
+    "name": "Fluffy",
+    "avatarUrl": "/avatars/fluffy.png",
+    "parentId": "3"
+  },
+  {
+    "id": "5",
+    "name": "Snowball",
+    "avatarUrl": "/avatars/snowball.png",
+    "parentId": "2"
+  },
+  {
+    "id": "6",
+    "name": "Tiger",
+    "avatarUrl": "/avatars/tiger.png",
+    "parentId": "2"
+  },
+  {
+    "id": "7",
+    "name": "Shadow",
+    "avatarUrl": "/avatars/shadow.png",
+    "parentId": null
+  }
+]
