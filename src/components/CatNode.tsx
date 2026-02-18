@@ -7,41 +7,97 @@ export interface CatNodeProps {
 }
 
 /**
- * Recursively renders a cat node with avatar, name and children.
+ * Recursively renders a cat node as a flat modern card with connector lines.
  */
 export default function CatNode(props: CatNodeProps) {
   const [isCollapsed, setIsCollapsed] = createSignal(
     props.collapsed ?? false
   );
 
+  const hasChildren = () => props.node.children.length > 0;
+
+  // Horizontal bar width = (children * cardWidth) + (gaps * gapWidth) - cardWidth
+  // We use CSS to span it via the children-row width instead (simpler approach below).
+
   return (
-    <div class="flex flex-col items-center">
-      {/* Node Box */}
+    <div class="tree-node">
+      {/* ── Card ── */}
       <button
         type="button"
-        onClick={() => setIsCollapsed(!isCollapsed())}
-        class="group relative p-1 bg-white dark:bg-gray-800 rounded-full shadow-md cursor-pointer"
+        class="cat-card"
+        onClick={() => hasChildren() && setIsCollapsed(!isCollapsed())}
+        style={{ cursor: hasChildren() ? "pointer" : "default" }}
+        aria-expanded={hasChildren() ? !isCollapsed() : undefined}
       >
-        <img
-          src={props.node.avatarUrl ?? ""}
-          alt={props.node.name}
-          class="w-12 h-12 object-cover rounded-full mb-1"
-        />
-        <span class="text-sm font-medium text-center block truncate">
-          {props.node.name}
-        </span>
+        {/* Avatar */}
+        <Show
+          when={props.node.avatarUrl}
+          fallback={<div class="cat-avatar-fallback">🐱</div>}
+        >
+          <img
+            src={props.node.avatarUrl}
+            alt={props.node.name}
+            class="cat-avatar"
+            onError={(e) => {
+              // Swap to fallback emoji on broken image
+              const el = e.currentTarget as HTMLImageElement;
+              el.style.display = "none";
+              const fb = document.createElement("div");
+              fb.className = "cat-avatar-fallback";
+              fb.textContent = "🐱";
+              el.parentElement?.insertBefore(fb, el);
+            }}
+          />
+        </Show>
+
+        {/* Name */}
+        <span class="cat-name">{props.node.name}</span>
+
+        {/* Chevron — only shown when node has children */}
+        <Show when={hasChildren()}>
+          <span
+            class={`cat-chevron${isCollapsed() ? "" : " cat-chevron--open"}`}
+          >
+            ▾
+          </span>
+        </Show>
       </button>
 
-      {/* Connector line to children */}
-      <Show when={props.node.children.length > 0 && !isCollapsed()}>
-        <div class="flex flex-col items-center mt-2">
-          {/* Vertical line leading down */}
-          <div class="border-l-2 border-gray-400 h-4"></div>
+      {/* ── Children ── */}
+      <Show when={hasChildren()}>
+        <div
+          class={`children-collapse${isCollapsed() ? " children-collapse--closed" : " children-collapse--open"
+            }`}
+        >
+          {/* Vertical line down from parent card */}
+          <div class="connector-down" />
 
-          <div class="flex flex-row space-x-8">
-            {props.node.children.map((child) => (
-              <CatNode node={child} collapsed={false} />
-            ))}
+          {/* Horizontal bar + children */}
+          <div style={{ position: "relative" }}>
+            {/* Horizontal connector bar — spans the children row */}
+            <Show when={props.node.children.length > 1}>
+              <div
+                class="connector-h-bar"
+                style={{
+                  // Span from center of first child to center of last child
+                  // Each card is 96px wide, gap is 24px
+                  width: `${(props.node.children.length - 1) * (96 + 24)}px`,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                }}
+              />
+            </Show>
+
+            {/* Children row */}
+            <div class="children-row">
+              {props.node.children.map((child) => (
+                <div class="child-wrapper">
+                  {/* Vertical drop to each child */}
+                  <div class="connector-drop" />
+                  <CatNode node={child} collapsed={false} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Show>

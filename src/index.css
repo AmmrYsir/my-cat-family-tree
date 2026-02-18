@@ -1,15 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-body {
-	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-		'Helvetica Neue', sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --color-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-accent: #6C63FF;
+  --color-accent-light: #EEF0FF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-connector: #D1D5DB;
+  --radius-card: 14px;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 6px 20px rgba(108, 99, 255, 0.14);
+  --transition: 180ms ease;
 }
 
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-		monospace;
+/* ── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+/* ── Page Shell ────────────────────────────────────────────── */
+.page-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.site-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-header__icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.site-header__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.site-header__tagline {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 0 4px;
+  font-weight: 400;
+}
+
+/* ── Tree Container ────────────────────────────────────────── */
+.tree-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px 64px;
+  overflow-x: auto;
+}
+
+/* ── Cat Card ──────────────────────────────────────────────── */
+.cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 14px 16px 12px;
+  width: 96px;
+  cursor: pointer;
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+  position: relative;
+  outline: none;
+}
+
+.cat-card:hover,
+.cat-card:focus-visible {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.cat-card:active {
+  transform: translateY(0);
+}
+
+/* ── Avatar ────────────────────────────────────────────────── */
+.cat-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+  transition: border-color var(--transition);
+  background-color: var(--color-accent-light);
+}
+
+.cat-card:hover .cat-avatar,
+.cat-card:focus-visible .cat-avatar {
+  border-color: var(--color-accent);
+}
+
+/* Avatar fallback emoji */
+.cat-avatar-fallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-accent-light);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  transition: border-color var(--transition);
+}
+
+.cat-card:hover .cat-avatar-fallback {
+  border-color: var(--color-accent);
+}
+
+/* ── Cat Name ──────────────────────────────────────────────── */
+.cat-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+  line-height: 1.3;
+}
+
+/* ── Chevron ───────────────────────────────────────────────── */
+.cat-chevron {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  transition: transform var(--transition), color var(--transition);
+  line-height: 1;
+}
+
+.cat-chevron--open {
+  transform: rotate(180deg);
+  color: var(--color-accent);
+}
+
+/* ── Tree Node Wrapper ─────────────────────────────────────── */
+.tree-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Connector Lines ───────────────────────────────────────── */
+.connector-down {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-connector);
+  margin: 0 auto;
+}
+
+.connector-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* The horizontal bar spanning all children */
+.connector-h-bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 1px;
+  background-color: var(--color-connector);
+}
+
+.children-row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  position: relative;
+}
+
+/* Each child has a vertical drop line above it */
+.child-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connector-drop {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-connector);
+}
+
+/* ── Children Collapse Animation ───────────────────────────── */
+.children-collapse {
+  overflow: hidden;
+  transition: max-height 250ms ease, opacity 200ms ease;
+}
+
+.children-collapse--open {
+  max-height: 2000px;
+  opacity: 1;
+}
+
+.children-collapse--closed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ── Loading Skeleton ──────────────────────────────────────── */
+.skeleton-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 32px;
+}
+
+.skeleton-card {
+  width: 96px;
+  height: 110px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(108, 99, 255, 0.06) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-row {
+  display: flex;
+  gap: 24px;
 }
